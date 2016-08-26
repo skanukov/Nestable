@@ -287,14 +287,22 @@
 
         dragStop: function(e)
         {
+            var opt   = this.options,
+                mouse = this.mouse;
+
+            var deltaX = Math.abs(mouse.startX - e.pageX),
+                deltaY = Math.abs(mouse.startY - e.pageY);
+
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
 
             this.dragEl.remove();
-            this.el.trigger('change', [el]);
-            if (this.hasNewRoot) {
-                this.dragRootEl.trigger('change', [el]);
+            if (deltaX >= opt.threshold || deltaY >= opt.threshold) {
+                this.el.trigger('change', [el]);
+                if (this.hasNewRoot) {
+                    this.dragRootEl.trigger('change', [el]);
+                }
             }
             this.reset();
         },
